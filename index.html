@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MedBook Exchange — Second-Hand MBBS Books</title>
+  <meta name="description" content="Buy and sell second-hand MBBS books anonymously." />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand" onclick="showHome()">📚 <span>MedBook Exchange</span></div>
+    <nav>
+      <button class="nav-btn" onclick="showBuyer()">Browse Books</button>
+      <button class="nav-btn primary" onclick="showSeller()">Sell a Book</button>
+      <button class="nav-btn ghost" onclick="showAdmin()">Admin</button>
+    </nav>
+  </header>
+
+  <main>
+    <section id="homeView" class="view active">
+      <div class="hero">
+        <div class="hero-copy">
+          <span class="eyebrow">SECOND-HAND MBBS BOOK MARKETPLACE</span>
+          <h1>Find the books you need.<br><em>Sell the books you don't.</em></h1>
+          <p>Buy and sell MBBS textbooks through a simple, student-friendly marketplace. Public listings never reveal buyer or seller identities.</p>
+          <div class="hero-actions">
+            <button class="btn primary big" onclick="showBuyer()">Browse Books →</button>
+            <button class="btn secondary big" onclick="showSeller()">Sell Your Book</button>
+          </div>
+          <div class="trust-row">
+            <span>🔒 Anonymous listings</span>
+            <span>💬 WhatsApp handoff</span>
+            <span>💰 ₹50 marketplace fee</span>
+          </div>
+        </div>
+        <div class="hero-card">
+          <div class="floating-book">📕</div>
+          <div class="mini-label">AVAILABLE NOW</div>
+          <h3>Medical Textbooks</h3>
+          <p>1st • 2nd • 3rd • 4th Year MBBS</p>
+          <div class="mini-search">🔎 Search Anatomy, Pharmacology...</div>
+        </div>
+      </div>
+      <div class="how">
+        <h2>How it works</h2>
+        <div class="steps">
+          <div><b>01</b><h3>List</h3><p>Upload 2–3 photos, book details and your asking price.</p></div>
+          <div><b>02</b><h3>Browse</h3><p>Buyers search approved books by year, title or author.</p></div>
+          <div><b>03</b><h3>Connect</h3><p>Click Buy and start the conversation privately on WhatsApp.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="buyerView" class="view">
+      <div class="section-head">
+        <div><span class="eyebrow">MARKETPLACE</span><h2>Available Books</h2></div>
+        <button class="btn secondary" onclick="showHome()">← Home</button>
+      </div>
+      <div class="filters">
+        <input id="searchInput" class="search" placeholder="🔎  Search by book name or author..." oninput="renderBooks()" />
+        <select id="yearFilter" onchange="renderBooks()">
+          <option value="">All MBBS Years</option>
+          <option value="1">1st Year</option>
+          <option value="2">2nd Year</option>
+          <option value="3">3rd Year</option>
+          <option value="4">4th Year</option>
+        </select>
+      </div>
+      <div id="booksGrid" class="book-grid"><div class="loading">Loading books…</div></div>
+    </section>
+
+    <section id="sellerView" class="view">
+      <div class="section-head">
+        <div><span class="eyebrow">SELLER</span><h2>List a Book</h2><p class="muted">Your name and WhatsApp number will never be shown publicly.</p></div>
+        <button class="btn secondary" onclick="showHome()">← Home</button>
+      </div>
+      <form id="sellerForm" class="form-card">
+        <div class="form-grid">
+          <label>MBBS Year
+            <select id="sellerYear" required>
+              <option value="">Select year</option><option value="1">1st Year</option><option value="2">2nd Year</option>
+              <option value="3">3rd Year</option><option value="4">4th Year</option>
+            </select>
+          </label>
+          <label>Book Name
+            <input id="bookName" required maxlength="160" placeholder="e.g. Gray's Anatomy for Students" />
+          </label>
+          <label>Author
+            <input id="author" required maxlength="160" placeholder="e.g. Richard Drake" />
+          </label>
+          <label>Condition
+            <select id="condition" required>
+              <option value="">Select condition</option><option>Like New</option><option>Very Good</option><option>Good</option><option>Fair</option>
+            </select>
+          </label>
+          <label>Seller's Asking Price (₹)
+            <input id="sellerPrice" type="number" min="1" max="100000" required placeholder="350" />
+          </label>
+          <label>Your WhatsApp Number
+            <input id="whatsapp" required inputmode="numeric" placeholder="91XXXXXXXXXX" />
+            <small>Include country code. This stays private.</small>
+          </label>
+        </div>
+        <div class="price-preview">
+          <div><span>Your asking price</span><strong id="sellerPricePreview">₹0</strong></div>
+          <div class="plus">+</div>
+          <div><span>Marketplace fee</span><strong>₹50</strong></div>
+          <div class="equals">=</div>
+          <div><span>Buyer sees</span><strong id="buyerPricePreview">₹50</strong></div>
+        </div>
+        <label class="upload-box">
+          <input id="photos" type="file" accept="image/jpeg,image/png,image/webp" multiple required />
+          <span>📸</span><strong>Upload 2–3 photos</strong><small>Minimum 2, maximum 5 • JPG, PNG or WebP</small>
+        </label>
+        <div id="previewStrip" class="preview-strip"></div>
+        <label class="check"><input id="confirmAnon" type="checkbox" required /> I understand my personal details will remain private, but my book photos and listing details will be public.</label>
+        <button class="btn primary big full" type="submit">Submit Book for Approval</button>
+        <div id="sellerMessage" class="message"></div>
+      </form>
+    </section>
+
+    <section id="detailView" class="view">
+      <button class="btn secondary" onclick="showBuyer()">← Back to Books</button>
+      <div id="detailContent"></div>
+    </section>
+
+    <section id="adminView" class="view">
+      <div class="section-head">
+        <div><span class="eyebrow">PRIVATE</span><h2>Admin Dashboard</h2><p class="muted">Only the site owner can see seller contact details.</p></div>
+        <button class="btn secondary" onclick="showHome()">← Home</button>
+      </div>
+      <div id="adminLogin" class="form-card narrow">
+        <h3>Owner login</h3>
+        <p class="muted">Use the Supabase Auth account created for the site owner.</p>
+        <input id="adminEmail" type="email" placeholder="Admin email" />
+        <input id="adminPassword" type="password" placeholder="Password" />
+        <button class="btn primary full" onclick="adminLogin()">Sign in</button>
+        <div id="adminMessage" class="message"></div>
+      </div>
+      <div id="adminPanel" class="admin-panel hidden">
+        <div class="admin-toolbar">
+          <h3>Listings</h3>
+          <button class="btn secondary" onclick="adminLogout()">Sign out</button>
+        </div>
+        <div id="adminListings"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer><span>© MedBook Exchange</span><span>Built for student-to-student book resale</span></footer>
+
+  <div id="toast" class="toast"></div>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="config.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
